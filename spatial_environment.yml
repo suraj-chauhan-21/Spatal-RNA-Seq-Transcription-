@@ -1,0 +1,115 @@
+name: spatial_env
+channels:
+  - conda-forge
+  - bioconda
+  - pytorch
+  - defaults
+
+dependencies:
+  # Python version
+  - python=3.10
+  
+  # Core data science
+  - numpy::numpy>=1.21
+  - pandas>=1.3
+  - scipy>=1.7
+  - scikit-learn>=1.0
+  - scikit-image>=0.18
+  
+  # Bioinformatics - Single cell
+  - scanpy>=1.9
+  - anndata>=0.9
+  
+  # Bioinformatics - Spatial
+  - squidpy>=1.2
+  - spatialdata>=0.0.14
+  
+  # Visualization
+  - matplotlib>=3.5
+  - seaborn>=0.11
+  - plotly>=5.0
+  - napari>=0.4
+  - napari-spatialdata>=0.1
+  
+  # Network analysis
+  - networkx>=2.6
+  - python-igraph>=0.10
+  - leidenalg>=0.9
+  
+  # Statistics
+  - statsmodels>=0.13
+  - scikit-posthocs>=0.4
+  
+  # Image processing
+  - tifffile>=2021
+  - pillow>=9.0
+  - opencv>=4.5
+  
+  # Data formats
+  - h5py>=3.0
+  - zarr>=2.10
+  - tiledb>=2.10
+  
+  # Development
+  - jupyter>=1.0
+  - jupyterlab>=3.0
+  - notebook>=6.4
+  - ipython>=7.0
+  - ipywidgets>=7.6
+  
+  # GPU support (optional - uncomment if needed)
+  # - pytorch::pytorch::*=cuda11*
+  # - pytorch::pytorch-cuda=11.8
+  # - pytorch::torchvision
+  # - pytorch::torchaudio
+  
+  # CPU-only PyTorch (default)
+  - pytorch::pytorch::*=cpu*
+  - pytorch::cpuonly
+  
+  # Bioinformatics utilities
+  - bedtools>=2.31
+  - samtools>=1.15
+  
+  # Development tools
+  - git>=2.30
+  - pytest>=7.0
+  - pytest-cov>=3.0
+  - black>=22.0
+  - flake8>=4.0
+  - mypy>=0.950
+  
+  # Documentation
+  - sphinx>=4.5
+  - sphinx-rtd-theme>=1.0
+  - sphinx-autodoc-typehints>=1.12
+  
+  # System utilities
+  - parallel>=20210722
+  - wget>=1.21
+  - curl>=7.80
+  
+  # R (optional for some analyses)
+  - r-base=4.3.3
+  - r-tidyverse
+  - r-ggplot2
+  - r-loomR
+
+pip:
+  # Additional Python packages
+  - cellchat>=1.4
+  - tangram-sc>=1.0
+  - decoupler>=1.3
+  - dorothea>=1.9
+  - pertpy>=0.8
+  - rapids-xgboost>=2.1
+  - kneedle>=0.8
+  - umap-learn>=0.5
+  - adjustText>=0.7
+  - python-annoy>=1.17
+  - pymde>=0.1
+  - Pillow>=9.0
+  
+variables:
+  CONDA_ENV_NAME: spatial_env
+  PYTHON_VERSION: "3.10"

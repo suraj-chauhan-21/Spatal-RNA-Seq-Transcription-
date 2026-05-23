@@ -1,0 +1,190 @@
+# Spatial Transcriptomics Analysis Configuration
+# Edit this file to customize pipeline parameters
+
+# Data settings
+data:
+  platform: "merfish"  # Options: merfish, visium, slideseq, h5ad
+  data_path: "data/sample.h5ad"
+  sample_name: "sample_001"
+  batch_key: null  # Key in obs for batch information
+
+# Quality Control
+qc:
+  min_counts: 100
+  min_genes: 50
+  max_mt_pct: 20
+  remove_spatial_outliers: true
+  outlier_method: "mad"  # mean absolute deviation
+  outlier_threshold: 3
+
+# Normalization
+normalization:
+  method: "total_count"  # Options: total_count, log_total
+  target_sum: 1e4
+  
+# Highly Variable Gene Selection
+hvg:
+  method: "seurat_v3"
+  n_top_genes: 2000
+  batch_key: null  # For batch-aware selection
+
+# Dimensionality Reduction
+dimensionality_reduction:
+  n_pcs: 20
+  pca_method: "incremental"
+  use_rep: "X"
+  
+# Clustering
+clustering:
+  method: "leiden"  # Options: leiden, louvain
+  resolution: 0.5
+  key_added: "leiden"
+  use_spatial: true
+  n_neighbors: 6
+  
+# Spatial neighborhood analysis
+spatial:
+  compute_spatial_graph: true
+  spatial_neighbors:
+    n_neighbors: 6
+    radius: 150  # in micrometers
+  
+# Integration (for multi-slide analysis)
+integration:
+  method: "scanorama"  # Options: scanorama, harmony, seurat
+  batch_key: "batch"
+  n_pcs: 20
+  
+# Cell type annotation
+annotation:
+  method: "marker_based"  # Options: marker_based, reference, manual
+  reference_file: null
+  marker_genes_file: "config/marker_genes.csv"
+  auto_threshold: 0.5
+  
+# Cell-cell communication
+cellchat:
+  run_analysis: true
+  database: "CellChatDB"
+  min_cells: 10
+  
+# Visualization
+visualization:
+  spot_size: 30
+  figsize: [10, 10]
+  dpi: 300
+  format: "pdf"  # Options: pdf, png, svg
+  cmap: "viridis"
+  
+  # Spatial plot specific
+  spatial:
+    size: 30
+    alpha: 0.8
+    show_cluster_boundaries: false
+    
+  # Gene expression maps
+  genes:
+    size: 30
+    alpha: 0.8
+    vmin: 0
+    vmax: "p99"  # Options: p99, p95, max
+    
+# Output
+output:
+  save_processed: true
+  save_figures: true
+  save_tables: true
+  format: ["csv", "xlsx"]
+  compression: "gzip"
+  
+  # Directory structure
+  directories:
+    figures: "results/figures/"
+    tables: "results/tables/"
+    data: "results/data/"
+    report: "results/report/"
+
+# Advanced parameters
+advanced:
+  # GPU acceleration
+  use_gpu: false
+  gpu_device: 0
+  
+  # Memory optimization
+  cache_size: 4  # GB
+  chunk_size: 10000
+  
+  # Parallel processing
+  n_jobs: 4
+  backend: "loky"
+  
+  # Random seed for reproducibility
+  seed: 42
+  
+  # Logging
+  log_level: "info"
+  save_logs: true
+
+# Platform-specific parameters
+platform_specific:
+  merfish:
+    z_range: [0, 50]  # z-axis range in micrometers
+    intensity_threshold: 10
+    
+  visium:
+    scale_factor: 1.0
+    spot_diameter_fullres: 50
+    
+  slideseq:
+    bead_diameter: 2
+    resolution: "high"
+
+# Analysis options
+analysis:
+  # Trajectory analysis
+  trajectory:
+    run: false
+    method: "DPT"  # Options: DPT, pseudotime
+    start_cell: null
+    
+  # Differential expression
+  de_analysis:
+    run: true
+    method: "wilcoxon"
+    min_pct: 0.25
+    logfc_threshold: 0.25
+    
+  # Enrichment analysis
+  enrichment:
+    run: true
+    databases: ["GO", "KEGG", "Reactome"]
+    min_gene_size: 3
+    max_gene_size: 500
+    
+  # Ligand-receptor analysis
+  lr_analysis:
+    run: true
+    database: "CellChatDB"
+
+# Batch processing
+batch:
+  enabled: false
+  input_directory: "data/raw/"
+  pattern: "*.h5ad"
+  parallel: true
+  n_cores: 4
+
+# Quality assessment thresholds
+qa:
+  min_cells_cluster: 5
+  min_genes_cluster: 20
+  max_correlation_redundancy: 0.95
+  
+# Report generation
+report:
+  generate_html: true
+  include_plots: true
+  include_tables: true
+  include_qc: true
+  interactive_plots: true
+  theme: "bootstrap"

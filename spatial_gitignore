@@ -1,0 +1,125 @@
+# .gitignore for Spatial Transcriptomics Pipeline
+
+# Data files (large, exclude from git)
+*.h5ad
+*.h5
+*.zarr
+*.loom
+*.mtx
+*.csv.gz
+*.tar.gz
+*.zip
+
+# Raw data
+data/raw/
+data/processed/
+!data/README.md
+
+# Results
+results/
+*.pdf
+*.png
+*.jpg
+*.svg
+
+# Jupyter and notebooks
+.ipynb_checkpoints/
+*.ipynb
+.jupyter/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.conda/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.project
+.pydevproject
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# Sphinx documentation
+docs/_build/
+docs/.sphinx/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Environments
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# OS
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Large analysis files (keep small for git)
+*.npy
+*.npz
+!tests/data/*.h5ad
+
+# Keep documentation
+!docs/
+!examples/
+!notebooks/*.ipynb

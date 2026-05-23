@@ -1,0 +1,157 @@
+.PHONY: help install setup test lint format docs clean build
+
+# Variables
+PYTHON := python3
+PIP := pip3
+PYTEST := pytest
+BLACK := black
+FLAKE8 := flake8
+MYPY := mypy
+CONDA := conda
+
+REPO_DIR := $(shell pwd)
+SRC_DIR := $(REPO_DIR)/src
+TEST_DIR := $(REPO_DIR)/tests
+DOCS_DIR := $(REPO_DIR)/docs
+
+.DEFAULT_GOAL := help
+
+help: ## Show this help message
+	@echo 'Usage: make [target]'
+	@echo ''
+	@echo 'Available targets:'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-20s %s\n", $$1, $$2}'
+
+install: ## Install the package and dependencies
+	@echo "Installing dependencies..."
+	$(CONDA) env create -f environment.yml || $(CONDA) env update -f environment.yml
+	@echo "✓ Installation complete"
+
+setup: install ## Setup development environment
+	@echo "Setting up development environment..."
+	conda activate spatial_env && pip install -e ".[dev]"
+	$(MAKE) test
+	@echo "✓ Setup complete"
+
+test: ## Run all tests
+	@echo "Running tests..."
+	$(PYTEST) $(TEST_DIR) -v --tb=short
+
+test-cov: ## Run tests with coverage report
+	@echo "Running tests with coverage..."
+	$(PYTEST) $(TEST_DIR) --cov=src --cov-report=html --cov-report=term
+	@echo "✓ Coverage report: htmlcov/index.html"
+
+test-integration: ## Run integration tests only
+	@echo "Running integration tests..."
+	$(PYTEST) $(TEST_DIR) -m integration -v
+
+test-unit: ## Run unit tests only
+	@echo "Running unit tests..."
+	$(PYTEST) $(TEST_DIR) -m "not integration" -v
+
+lint: ## Check code style with flake8
+	@echo "Checking code style..."
+	$(FLAKE8) $(SRC_DIR) --max-line-length=100 --exclude=__pycache__
+
+type-check: ## Run type checking with mypy
+	@echo "Type checking..."
+	$(MYPY) $(SRC_DIR) --ignore-missing-imports
+
+format: ## Format code with black
+	@echo "Formatting code..."
+	$(BLACK) $(SRC_DIR) $(TEST_DIR)
+	@echo "✓ Code formatted"
+
+format-check: ## Check code formatting without modifying
+	@echo "Checking code format..."
+	$(BLACK) $(SRC_DIR) $(TEST_DIR) --check
+
+quality: format lint type-check ## Run all quality checks
+	@echo "✓ All quality checks passed"
+
+docs: ## Build documentation
+	@echo "Building documentation..."
+	cd $(DOCS_DIR) && make html
+	@echo "✓ Documentation built: $(DOCS_DIR)/_build/html/index.html"
+
+docs-serve: docs ## Build and serve documentation
+	@echo "Serving documentation at http://localhost:8000"
+	python -m http.server 8000 --directory $(DOCS_DIR)/_build/html
+
+clean: ## Clean up generated files
+	@echo "Cleaning up..."
+	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+	find . -type f -name "*.pyc" -delete
+	rm -rf build dist *.egg-info
+	rm -rf .pytest_cache .mypy_cache .coverage htmlcov
+	rm -rf $(DOCS_DIR)/_build
+	@echo "✓ Cleanup complete"
+
+clean-data: ## Remove large data files
+	@echo "Removing data files..."
+	find data/ -name "*.h5ad" -o -name "*.h5" -o -name "*.zarr" | xargs rm -rf
+	@echo "✓ Data files removed"
+
+build: clean ## Build distribution packages
+	@echo "Building distribution..."
+	$(PYTHON) setup.py sdist bdist_wheel
+	@echo "✓ Build complete: dist/"
+
+publish: build ## Publish to PyPI
+	@echo "Publishing to PyPI..."
+	twine upload dist/*
+	@echo "✓ Published"
+
+run-example: ## Run example analysis
+	@echo "Running example analysis..."
+	$(PYTHON) examples/merfish_example.py
+	@echo "✓ Example complete"
+
+jupyter: ## Start Jupyter notebook server
+	@echo "Starting Jupyter..."
+	jupyter notebook
+
+docker-build: ## Build Docker image
+	@echo "Building Docker image..."
+	docker build -f Dockerfile -t spatial-transcriptomics:latest .
+	@echo "✓ Image built"
+
+docker-run: docker-build ## Run Docker container
+	@echo "Running Docker container..."
+	docker run -it -v $(REPO_DIR):/workspace spatial-transcriptomics:latest
+
+environment-export: ## Export conda environment
+	@echo "Exporting environment..."
+	conda env export -n spatial_env > environment_export.yml
+	@echo "✓ Environment exported"
+
+requirements-export: ## Export pip requirements
+	@echo "Exporting requirements..."
+	pip freeze > requirements_exported.txt
+	@echo "✓ Requirements exported"
+
+version: ## Show version information
+	@echo "Version Information:"
+	@echo "  Python: $$($(PYTHON) --version)"
+	@echo "  Conda: $$($(CONDA) --version)"
+	@$(PYTHON) -c "import squidpy; print('  Squidpy:', squidpy.__version__)"
+	@$(PYTHON) -c "import scanpy; print('  Scanpy:', scanpy.__version__)"
+
+validate: ## Validate installation and configuration
+	@echo "Validating installation..."
+	@$(PYTHON) -c "import squidpy, scanpy, anndata; print('✓ Core packages available')"
+	@$(PYTHON) -c "import matplotlib, seaborn; print('✓ Visualization packages available')"
+	@$(PYTHON) -c "import pytest, black; print('✓ Development tools available')"
+
+all: clean install lint test docs ## Run all checks
+	@echo "✓ All tasks completed"
+
+.SILENT: help version
+
+# CI/CD targets
+ci-test: test-cov lint type-check ## Run CI tests
+	@echo "✓ CI tests passed"
+
+ci-build: build docs ## Build CI artifacts
+	@echo "✓ CI build complete"

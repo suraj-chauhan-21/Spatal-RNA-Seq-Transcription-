@@ -1,0 +1,66 @@
+# Dockerfile for Spatial Transcriptomics Pipeline
+# Base image with Python and system dependencies
+
+FROM continuumio/miniconda3:latest
+
+LABEL maintainer="Your Name <your.email@institution.org>"
+LABEL description="Spatial Transcriptomics Analysis Pipeline"
+LABEL version="1.0.0"
+
+# Set working directory
+WORKDIR /workspace
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    git \
+    wget \
+    curl \
+    nano \
+    libhdf5-dev \
+    libopenblas-dev \
+    liblapack-dev \
+    gfortran \
+    parallel \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy environment file
+COPY environment.yml /tmp/environment.yml
+
+# Create conda environment
+RUN conda env create -f /tmp/environment.yml && \
+    conda clean --all --yes
+
+# Activate conda environment
+SHELL ["conda", "run", "-n", "spatial_env", "/bin/bash", "-c"]
+
+# Copy project files
+COPY . /workspace/
+
+# Install package in editable mode
+RUN pip install -e . || true
+
+# Set up directory structure
+RUN mkdir -p data/raw data/processed results/figures results/tables results/data results/report logs notebooks
+
+# Create entry point script
+RUN echo '#!/bin/bash\n\
+source activate spatial_env\n\
+exec "$@"' > /entrypoint.sh && \
+    chmod +x /entrypoint.sh
+
+# Set environment variables
+ENV CONDA_ENV=spatial_env
+ENV PYTHONUNBUFFERED=1
+ENV PATH=/opt/conda/envs/spatial_env/bin:$PATH
+
+# Default command
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["bash"]
+
+# Expose Jupyter port (if using notebooks)
+EXPOSE 8888
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import squidpy, scanpy; print('healthy')" || exit 1
