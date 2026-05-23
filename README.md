@@ -1,6 +1,6 @@
 # Spatial Transcriptomics Analysis Pipeline
 
-🧬 **A comprehensive, reproducible workflow for spatial RNA-seq data analysis using Python-based tools (Squidpy, Scanpy, Spatialdata)**
+ **A comprehensive, reproducible workflow for spatial RNA-seq data analysis using Python-based tools (Squidpy, Scanpy, Spatialdata)**
 
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-blue)](https://github.com/yourusername/spatial-transcriptomics)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
@@ -8,7 +8,7 @@
 [![Conda](https://img.shields.io/badge/Conda-Environment-brightgreen)](environment.yml)
 [![DOI](https://img.shields.io/badge/DOI-10.1038/s41592--021--01358--2-blue)](https://doi.org/10.1038/s41592-021-01358-2)
 
-## 📑 Table of Contents
+##  Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
@@ -38,7 +38,7 @@ Spatial transcriptomics is a revolutionary technique that maps gene expression w
 
 ## Features
 
-✨ **Core Capabilities**
+ **Core Capabilities**
 - ✅ Multi-platform data import (MERFISH, Visium, Slide-seq, etc.)
 - ✅ Quality control and preprocessing
 - ✅ Spot/cell-level normalization and integration
@@ -50,7 +50,7 @@ Spatial transcriptomics is a revolutionary technique that maps gene expression w
 - ✅ Interactive HTML reports
 - ✅ Fully reproducible with Docker & Conda
 
-🔧 **Bioinformatics Tools**
+**Bioinformatics Tools**
 - **Squidpy** - Spatial analysis framework
 - **Scanpy** - Single-cell preprocessing
 - **SpatialData** - Standardized data format
@@ -59,7 +59,7 @@ Spatial transcriptomics is a revolutionary technique that maps gene expression w
 - **CellChat** - Cell-cell communication
 - **Scanorama** - Integration across slides
 
-📊 **Visualization**
+**Visualization**
 - Spatial heatmaps with anatomical context
 - Interactive Napari-based exploration
 - 3D spatial reconstructions
