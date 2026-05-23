@@ -1,4 +1,4 @@
-# Spatial Transcriptomics Analysis Pipeline
+se# Spatial Transcriptomics Analysis Pipeline
 
  **A comprehensive, reproducible workflow for spatial RNA-seq data analysis using Python-based tools (Squidpy, Scanpy, Spatialdata)**
 
@@ -644,7 +644,7 @@ This project is licensed under the MIT License - see [LICENSE](LICENSE) for deta
 
 - **Issues**: GitHub Issues
 - **Discussions**: GitHub Discussions
-- **Email**: your.email@institution.org
+- **Email**: surajchauhandbz@gmail.com
 - **Community Chat**: [Discord/Slack link]
 
 ---
