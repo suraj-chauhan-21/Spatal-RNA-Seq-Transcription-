@@ -1,4 +1,4 @@
-se# Spatial Transcriptomics Analysis Pipeline
+# Spatial Transcriptomics Analysis Pipeline
 
  **A comprehensive, reproducible workflow for spatial RNA-seq data analysis using Python-based tools (Squidpy, Scanpy, Spatialdata)**
 
