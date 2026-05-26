@@ -93,7 +93,7 @@ Spatial transcriptomics is a revolutionary technique that maps gene expression w
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/spatial-transcriptomics.git
+git clone https://github.com/suraj-chauhan-21/spatial-transcriptomics.git
 cd spatial-transcriptomics
 
 # Run installation script
